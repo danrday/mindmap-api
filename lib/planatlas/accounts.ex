@@ -5,6 +5,16 @@ defmodule Planatlas.Accounts do
 	alias Planatlas.Repo
 	alias Planatlas.Accounts.User
 
+	def change_user(%User{} = user) do
+		User.changeset(user, %{})
+	end
+
+	def create_user(attrs \\ %{}) do
+		%User{}
+		|> User.changeset(attrs)
+		|> Repo.insert()
+	end
+
 	def get_user(id) do
 		Repo.get(User, id)
 	end
