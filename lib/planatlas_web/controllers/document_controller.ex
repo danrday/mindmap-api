@@ -15,7 +15,14 @@ defmodule PlanatlasWeb.DocumentController do
   end
 
   def create(conn, %{"document" => document_params}) do
-    case Documents.create_document(document_params) do
+    current_user = conn.assigns.current_user
+    
+    result =
+    document_params
+    |> Documents.create_document(current_user)
+    |> Documents.create_user_document(current_user)
+
+    case result do
       {:ok, document} ->
         conn
         |> put_flash(:info, "Document created successfully.")

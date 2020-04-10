@@ -5,7 +5,9 @@ defmodule Planatlas.Documents do
 
   import Ecto.Query, warn: false
   alias Planatlas.Repo
+  alias Planatlas.Accounts
 
+  alias Planatlas.Accounts.UserDocument
   alias Planatlas.Documents.Document
 
   @doc """
@@ -49,7 +51,28 @@ defmodule Planatlas.Documents do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_document(attrs \\ %{}) do
+  def create_user_document({:ok, document}, %Accounts.User{} = user) do
+    result =
+    %UserDocument{}
+    |> UserDocument.changeset(%{user_role: "admin"})
+    |> Ecto.Changeset.put_assoc(:user, user)
+    |> Ecto.Changeset.put_assoc(:document, document)
+    |> Repo.insert()
+
+    case result do
+      {:ok, user_document} ->
+        {:ok, document}
+
+      _ ->
+        result
+    end
+  end
+
+  def create_user_document({:error, changeset}, _user) do
+    {:error, changeset}
+  end
+
+  def create_document(attrs \\ %{}, %Accounts.User{} = user) do
     %Document{}
     |> Document.changeset(attrs)
     |> Repo.insert()

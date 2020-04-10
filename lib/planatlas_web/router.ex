@@ -22,4 +22,10 @@ defmodule PlanatlasWeb.Router do
     resources "/sessions", SessionController, only: [:new, :create, :delete]
     resources "/documents", DocumentController
   end
+
+  scope "/manage", PlanatlasWeb do
+    pipe_through [:browser, :authenticate_user]
+
+    resources "/documents", DocumentController
+  end
 end

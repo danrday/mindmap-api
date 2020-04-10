@@ -23,6 +23,7 @@ defmodule PlanatlasWeb do
 
       import Plug.Conn
       import PlanatlasWeb.Gettext
+      import PlanatlasWeb.Auth, only: [authenticate_user: 2]
       alias PlanatlasWeb.Router.Helpers, as: Routes
     end
   end
@@ -50,6 +51,7 @@ defmodule PlanatlasWeb do
       use Phoenix.Router
       import Plug.Conn
       import Phoenix.Controller
+      import PlanatlasWeb.Auth, only: [authenticate_user: 2]
     end
   end
 
