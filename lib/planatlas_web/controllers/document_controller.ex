@@ -4,19 +4,22 @@ defmodule PlanatlasWeb.DocumentController do
   alias Planatlas.Documents
   alias Planatlas.Documents.Document
 
-  def index(conn, _params) do
-    documents = Documents.list_documents()
+  def action(conn, _) do
+    args = [conn, conn.params, conn.assigns.current_user]
+    apply(__MODULE__, action_name(conn), args)
+  end
+
+  def index(conn, _params, current_user) do
+    documents = Documents.list_user_documents(current_user)
     render(conn, "index.html", documents: documents)
   end
 
-  def new(conn, _params) do
+  def new(conn, _params, _current_user) do
     changeset = Documents.change_document(%Document{})
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"document" => document_params}) do
-    current_user = conn.assigns.current_user
-    
+  def create(conn, %{"document" => document_params}, current_user) do
     result =
     document_params
     |> Documents.create_document(current_user)
@@ -33,19 +36,24 @@ defmodule PlanatlasWeb.DocumentController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    document = Documents.get_document!(id)
+  def show(conn, %{"id" => id}, current_user) do
+    document = Documents.get_user_document!(current_user, id)
     render(conn, "show.html", document: document)
   end
 
-  def edit(conn, %{"id" => id}) do
-    document = Documents.get_document!(id)
+  def share(conn, %{"id" => id}, current_user) do
+    document = Documents.get_user_document!(current_user, id)
+    render(conn, "share.html", document: document)
+  end
+
+  def edit(conn, %{"id" => id}, current_user) do
+    document = Documents.get_user_document!(current_user, id)
     changeset = Documents.change_document(document)
     render(conn, "edit.html", document: document, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "document" => document_params}) do
-    document = Documents.get_document!(id)
+  def update(conn, %{"id" => id, "document" => document_params}, current_user) do
+    document = Documents.get_user_document!(current_user, id)
 
     case Documents.update_document(document, document_params) do
       {:ok, document} ->
@@ -58,8 +66,9 @@ defmodule PlanatlasWeb.DocumentController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    document = Documents.get_document!(id)
+  def delete(conn, %{"id" => id}, current_user) do
+    document = Documents.get_user_document!(current_user, id)
+    Documents.delete_user_documents(document)
     {:ok, _document} = Documents.delete_document(document)
 
     conn

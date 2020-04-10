@@ -10,6 +10,33 @@ defmodule Planatlas.Documents do
   alias Planatlas.Accounts.UserDocument
   alias Planatlas.Documents.Document
 
+
+  # def list_user_documents(%Accounts.User{} = user) do
+  #   UserDocument
+  #   |> user_videos_query(user)
+  #   |> Repo.all()
+  # end
+
+  def list_user_documents(%Accounts.User{} = user) do
+    UserDocument
+    |> user_documents_query(user)
+    |> Repo.all()
+    |> Ecto.assoc(:document)
+    |> Repo.all()
+  end
+
+  def get_user_document!(%Accounts.User{} = user, id) do
+    UserDocument
+    |> user_documents_query(user)
+    |> Repo.all()
+    |> Ecto.assoc(:document)
+    |> Repo.get!(id)
+  end
+
+  defp user_documents_query(query, %Accounts.User{id: user_id}) do
+    from(v in query, where: v.user_id == ^user_id, join: d in "documents", on: d.id == v.document_id)
+  end
+
   @doc """
   Returns the list of documents.
 
@@ -19,7 +46,7 @@ defmodule Planatlas.Documents do
       [%Document{}, ...]
 
   """
-  def list_documents do
+  def list_documents() do
     Repo.all(Document)
   end
 
@@ -110,6 +137,11 @@ defmodule Planatlas.Documents do
   """
   def delete_document(%Document{} = document) do
     Repo.delete(document)
+  end
+
+  def delete_user_documents(%Document{} = document) do
+    from(d in UserDocument, where: d.document_id == ^document.id)
+    |> Repo.delete_all
   end
 
   @doc """
