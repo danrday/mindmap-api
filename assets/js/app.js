@@ -15,3 +15,10 @@ import "phoenix_html"
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
+
+let doc = document.getElementById("doc")
+
+if (doc) {
+  let data_id = doc.getAttribute("data-id")
+  console.log("document found! : ", data_id)
+}

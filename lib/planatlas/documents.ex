@@ -78,21 +78,33 @@ defmodule Planatlas.Documents do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user_document({:ok, document}, %Accounts.User{} = user) do
-    result =
+
+  def insert_single_user_document(user, document) do
     %UserDocument{}
     |> UserDocument.changeset(%{user_role: "admin"})
     |> Ecto.Changeset.put_assoc(:user, user)
     |> Ecto.Changeset.put_assoc(:document, document)
     |> Repo.insert()
+  end
 
-    case result do
-      {:ok, user_document} ->
+  def create_user_document({:ok, document}, %Accounts.User{} = user) do
+
+    allusers = Repo.all(Planatlas.Accounts.User)
+
+    result =
+    allusers
+    |> Enum.map(fn x -> insert_single_user_document(x, document) end)
+    |> IO.inspect
+    
+    # note: error check? 
+
+    # case result do
+    #   {:ok, user_document} ->
         {:ok, document}
 
-      _ ->
-        result
-    end
+    #   _ ->
+    #     result
+    # end
   end
 
   def create_user_document({:error, changeset}, _user) do

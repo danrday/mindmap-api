@@ -16,7 +16,7 @@
       <td><%= document.description %></td>
 
       <td>
-        <span><%= link "Show", to: Routes.document_path(@conn, :show, document) %></span>
+        <span><%= link "Open", to: Routes.open_path(@conn, :open, document) %></span>
         <span><%= link "Share", to: Routes.share_path(@conn, :share, document) %></span>
         <span><%= link "Edit", to: Routes.document_path(@conn, :edit, document) %></span>
         <span><%= link "Delete", to: Routes.document_path(@conn, :delete, document), method: :delete, data: [confirm: "Are you sure?"] %></span>

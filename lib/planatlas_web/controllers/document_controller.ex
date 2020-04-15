@@ -43,7 +43,8 @@ defmodule PlanatlasWeb.DocumentController do
 
   def share(conn, %{"id" => id}, current_user) do
     document = Documents.get_user_document!(current_user, id)
-    render(conn, "share.html", document: document)
+    changeset = Documents.change_document(document)
+    render(conn, "share.html", document: document, changeset: changeset)
   end
 
   def edit(conn, %{"id" => id}, current_user) do
