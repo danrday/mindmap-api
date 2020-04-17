@@ -1,0 +1,6 @@
+<h1>Share Document</h1>
+
+
+<button>share</button>
+
+<span><%= link "Back", to: Routes.document_path(@conn, :index) %></span>
