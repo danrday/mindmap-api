@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no, user-scalable=no"/>
     <title>Planatlas</title>
     <link rel="stylesheet" href="<%= Routes.static_url(@conn, "/css/app.css") %>"/>
+    <script>window.userToken = "<%= assigns[:user_token] %>"</script>
     <script defer type="text/javascript" src="<%= Routes.static_url(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
