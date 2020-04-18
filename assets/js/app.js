@@ -49,7 +49,7 @@ if (doc) {
   let doc_channel = socket.channel("documents:" + data_id)
 
   postButton.addEventListener("click", e => {
-    let payload = {body: msgInput.value, at: Date.now()}
+    let payload = {body: msgInput.value, at: new Date().toISOString()}
     doc_channel.push("new_annotation", payload)
       .receive("error", e => console.log(e))
     msgInput.value = ""

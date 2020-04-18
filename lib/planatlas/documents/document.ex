@@ -8,6 +8,7 @@ defmodule Planatlas.Documents.Document do
     field :description, :string
     field :title, :string
     field :slug, :string
+    has_many :annotations, Planatlas.Documents.Annotation
 
     timestamps()
   end
