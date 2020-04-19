@@ -2,13 +2,22 @@ defmodule PlanatlasWeb.DocumentChannel do
   use PlanatlasWeb, :channel
 
   alias Planatlas.{Accounts, Documents}
+  alias PlanatlasWeb.AnnotationView
 
   # def join("documents:" <> document_id, _params, socket) do
   #   {:ok, assign(socket, :document_id, String.to_integer(document_id))}
   # end
 
   def join("documents:" <> document_id, _params, socket) do
-    {:ok, assign(socket, :document_id, String.to_integer(document_id))}
+    document_id = String.to_integer(document_id)
+    document = Documents.get_document!(document_id)
+
+    annotations =
+      document
+      |> Documents.list_annotations()
+      |> Phoenix.View.render_many(AnnotationView, "annotation.json")
+
+    {:ok, %{annotations: annotations}, assign(socket, :document_id, document_id)}
   end
 
   def handle_in(event, params, socket) do

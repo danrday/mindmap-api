@@ -62,6 +62,8 @@ if (doc) {
   doc_channel.on("ping", ({count}) => console.log("PING", count))
 
   doc_channel.join()
-    .receive("ok", resp => console.log("joined the video channel", resp))
+    .receive("ok", ({annotations}) => {
+      annotations.forEach( ann => renderAnnotation(msgContainer, ann))
+    })
     .receive("error", reason => console.log("join failed", reason))
 }
