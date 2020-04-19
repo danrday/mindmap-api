@@ -11,9 +11,10 @@ defmodule Planatlas.Application do
       # Start the Ecto repository
       Planatlas.Repo,
       # Start the endpoint when the application starts
-      PlanatlasWeb.Endpoint
+      PlanatlasWeb.Endpoint,
       # Starts a worker by calling: Planatlas.Worker.start_link(arg)
       # {Planatlas.Worker, arg},
+      PlanatlasWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

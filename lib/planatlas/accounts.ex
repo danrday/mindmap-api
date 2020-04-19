@@ -2,6 +2,9 @@ defmodule Planatlas.Accounts do
 	@moduledoc """
 	The Accounts context.
 	"""
+
+	import Ecto.Query
+
 	alias Planatlas.Repo
 	alias Planatlas.Accounts.User
 
@@ -53,5 +56,9 @@ defmodule Planatlas.Accounts do
 
 	def list_users do
 		Repo.all(User)
+	end
+
+	def list_users_with_ids(ids) do
+		Repo.all(from(u in User, where: u.id in ^ids))
 	end
 end

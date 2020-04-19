@@ -8,16 +8,27 @@ defmodule PlanatlasWeb.DocumentChannel do
   #   {:ok, assign(socket, :document_id, String.to_integer(document_id))}
   # end
 
-  def join("documents:" <> document_id, _params, socket) do
+  def join("documents:" <> document_id, params, socket) do
+    send(self(), :after_join)
+    last_seen_id = params["last_seen_id"] || 0
     document_id = String.to_integer(document_id)
     document = Documents.get_document!(document_id)
 
     annotations =
       document
-      |> Documents.list_annotations()
+      |> Documents.list_annotations(last_seen_id)
       |> Phoenix.View.render_many(AnnotationView, "annotation.json")
 
     {:ok, %{annotations: annotations}, assign(socket, :document_id, document_id)}
+  end
+
+  def handle_info(:after_join, socket) do
+    push(socket, "presence_state", PlanatlasWeb.Presence.list(socket))
+    {:ok, _} = PlanatlasWeb.Presence.track(
+      socket,
+      socket.assigns.user_id,
+      %{devise: "browser"})
+    {:noreply, socket}
   end
 
   def handle_in(event, params, socket) do

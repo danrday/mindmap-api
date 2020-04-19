@@ -17,9 +17,10 @@ defmodule Planatlas.Documents do
     |> Repo.insert()
   end
 
-  def list_annotations(%Document{} = document) do
+  def list_annotations(%Document{} = document, since_id \\ 0) do
     Repo.all(
       from a in Ecto.assoc(document, :annotations),
+        where: a.id > ^since_id,
         order_by: [asc: a.at, asc: a.id],
         limit: 500,
         preload: [:user]
