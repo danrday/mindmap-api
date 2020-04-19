@@ -9,7 +9,23 @@ defmodule Planatlas.Documents do
 
   alias Planatlas.Accounts.UserDocument
   alias Planatlas.Documents.Document
+  alias Planatlas.Documents.Annotation
 
+  def annotate_document(%Accounts.User{id: user_id}, document_id, attrs) do
+    %Annotation{document_id: document_id, user_id: user_id}
+    |> Annotation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def list_annotations(%Document{} = document, since_id \\ 0) do
+    Repo.all(
+      from a in Ecto.assoc(document, :annotations),
+        where: a.id > ^since_id,
+        order_by: [asc: a.at, asc: a.id],
+        limit: 500,
+        preload: [:user]
+    )
+  end
 
   # def list_user_documents(%Accounts.User{} = user) do
   #   UserDocument

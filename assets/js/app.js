@@ -11,6 +11,8 @@ import css from "../css/app.css"
 //
 import "phoenix_html"
 
+import { Presence } from "phoenix"
+
 // Import local files
 //
 // Local files can be imported directly using relative paths, for example:
@@ -45,23 +47,42 @@ if (doc) {
   let msgContainer = document.getElementById("msg-container")
   let msgInput = document.getElementById("msg-input")
   let postButton = document.getElementById("msg-submit")
+  let userList = document.getElementById("user-list")
+  let lastSeenId = 0
 
-  let doc_channel = socket.channel("documents:" + data_id)
+  let doc_channel = socket.channel("documents:" + data_id, () => {
+    return {last_seen_id: lastSeenId}
+  })
+
+  let presence = new Presence(doc_channel)
+
+  presence.onSync(() => {
+    userList.innerHTML = presence.list((id, 
+      {user: user, metas: [first, ...rest]}) => {
+      let count = rest.length + 1
+      return `<li>${user.username}: (${count})</li>`
+    }).join("")
+  })
 
   postButton.addEventListener("click", e => {
-    let payload = {body: msgInput.value, at: Date.now()}
+    let payload = {body: msgInput.value, at: new Date().toISOString()}
     doc_channel.push("new_annotation", payload)
       .receive("error", e => console.log(e))
     msgInput.value = ""
   })
 
   doc_channel.on("new_annotation", (resp) => {
+    lastSeenId = resp.id
     renderAnnotation(msgContainer, resp)
   })
 
   doc_channel.on("ping", ({count}) => console.log("PING", count))
 
   doc_channel.join()
-    .receive("ok", resp => console.log("joined the video channel", resp))
+    .receive("ok", ({annotations}) => {
+      let ids = annotations.map(ann => ann.id)
+      if (ids.length > 0) { lastSeenId = Math.max(...ids) }
+      annotations.forEach( ann => renderAnnotation(msgContainer, ann))
+    })
     .receive("error", reason => console.log("join failed", reason))
 }
