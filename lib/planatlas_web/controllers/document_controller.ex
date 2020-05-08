@@ -70,6 +70,7 @@ defmodule PlanatlasWeb.DocumentController do
   def delete(conn, %{"id" => id}, current_user) do
     document = Documents.get_user_document!(current_user, id)
     Documents.delete_user_documents(document)
+    Documents.delete_annotations(document)
     {:ok, _document} = Documents.delete_document(document)
 
     conn

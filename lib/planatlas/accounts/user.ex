@@ -7,6 +7,7 @@ defmodule Planatlas.Accounts.User do
 		field :username, :string
 		field :password, :string, virtual: true
 		field :password_hash, :string
+		# has_many :user_documents, Planatlas.Accounts.UserDocument
 
 		timestamps()
 	end

@@ -27,18 +27,21 @@ defmodule Planatlas.Documents do
     )
   end
 
-  # def list_user_documents(%Accounts.User{} = user) do
-  #   UserDocument
-  #   |> user_videos_query(user)
-  #   |> Repo.all()
-  # end
-
   def list_user_documents(%Accounts.User{} = user) do
     UserDocument
     |> user_documents_query(user)
     |> Repo.all()
-    |> Ecto.assoc(:document)
-    |> Repo.all()
+    |> IO.inspect(label: "user docs query")
+    |> if_user_documents
+  end
+
+  def if_user_documents(results) do
+    case results do
+      [] -> []
+      _ -> results
+            |> Ecto.assoc(:document)
+            |> Repo.all()
+    end
   end
 
   def get_user_document!(%Accounts.User{} = user, id) do
@@ -165,6 +168,11 @@ defmodule Planatlas.Documents do
   """
   def delete_document(%Document{} = document) do
     Repo.delete(document)
+  end
+
+  def delete_annotations(%Document{} = document) do
+    from(d in Annotation, where: d.document_id == ^document.id)
+    |> Repo.delete_all
   end
 
   def delete_user_documents(%Document{} = document) do
