@@ -36,6 +36,24 @@ defmodule Planatlas.Documents do
     |> Enum.map(&(&1.document))
   end
 
+  # def list_user_documents(%Accounts.User{} = user) do
+  #   UserDocument
+  #   |> user_documents_query(user)
+  #   |> Repo.all()
+  #   |> IO.inspect(label: "DOCUMENTS:")
+  #   |> get_associated_documents
+  # end
+
+  # Ecto.assoc throws exception if it gets an empty list!
+  # def get_associated_documents(user_documents) do
+  #   case user_documents do
+  #     [] -> []
+  #     _ -> user_documents
+  #             |> Ecto.assoc(:document)
+  #             |> Repo.all()
+  #   end
+  # end
+
   def get_user_document!(%Accounts.User{} = user, id) do
     {:ok, cast_id} = P.cast(id)
 
