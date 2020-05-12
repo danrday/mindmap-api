@@ -10,6 +10,7 @@ defmodule Planatlas.Documents do
   alias Planatlas.Accounts.UserDocument
   alias Planatlas.Documents.Document
   alias Planatlas.Documents.Annotation
+  alias Planatlas.Documents.Permalink, as: P
 
   def annotate_document(%Accounts.User{id: user_id}, document_id, attrs) do
     %Annotation{document_id: document_id, user_id: user_id}
@@ -31,29 +32,31 @@ defmodule Planatlas.Documents do
     UserDocument
     |> user_documents_query(user)
     |> Repo.all()
-    |> IO.inspect(label: "user docs query")
-    |> if_user_documents
-  end
-
-  def if_user_documents(results) do
-    case results do
-      [] -> []
-      _ -> results
-            |> Ecto.assoc(:document)
-            |> Repo.all()
-    end
+    |> Repo.preload(:document)
+    |> Enum.map(&(&1.document))
   end
 
   def get_user_document!(%Accounts.User{} = user, id) do
-    UserDocument
-    |> user_documents_query(user)
-    |> Repo.all()
-    |> Ecto.assoc(:document)
-    |> Repo.get!(id)
+    {:ok, cast_id} = P.cast(id)
+
+    %UserDocument{ user_role: user_role } = UserDocument
+      |> user_documents_query(user)
+      |> where([v,d], d.id == ^cast_id)
+      # |> select([v,d], d.id) 
+      |> Repo.one()
+
+      user_role
+      |> IO.inspect(label: "USER_ROLE:")
+
+    Document
+    |> Repo.get!(cast_id)
   end
 
   defp user_documents_query(query, %Accounts.User{id: user_id}) do
-    from(v in query, where: v.user_id == ^user_id, join: d in "documents", on: d.id == v.document_id)
+    from(v in query, 
+         where: v.user_id == ^user_id,
+         join: d in "documents",
+         on: d.id == v.document_id)
   end
 
   @doc """

@@ -7,7 +7,9 @@ defmodule Planatlas.Accounts.User do
 		field :username, :string
 		field :password, :string, virtual: true
 		field :password_hash, :string
-		# has_many :user_documents, Planatlas.Accounts.UserDocument
+		has_many :users_documents, Planatlas.Accounts.UserDocument
+		many_to_many :documents, Planatlas.Documents.Document, join_through: Planatlas.Accounts.UserDocument
+		has_many :annotations, Planatlas.Documents.Annotation
 
 		timestamps()
 	end

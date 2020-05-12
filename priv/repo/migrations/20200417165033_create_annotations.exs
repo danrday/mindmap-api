@@ -5,8 +5,8 @@ defmodule Planatlas.Repo.Migrations.CreateAnnotations do
     create table(:annotations) do
       add :body, :text
       add :at, :utc_datetime
-      add :user_id, references(:users, on_delete: :nothing)
-      add :document_id, references(:documents, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :delete_all)
+      add :document_id, references(:documents, on_delete: :delete_all)
 
       timestamps()
     end
