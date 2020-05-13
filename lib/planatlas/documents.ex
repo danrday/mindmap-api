@@ -32,49 +32,33 @@ defmodule Planatlas.Documents do
     UserDocument
     |> user_documents_query(user)
     |> Repo.all()
-    |> Repo.preload(:document)
+    # |> Repo.preload(:document) does this make another call to the db?
     |> Enum.map(&(&1.document))
-  end
-
-  # def list_user_documents(%Accounts.User{} = user) do
-  #   UserDocument
-  #   |> user_documents_query(user)
-  #   |> Repo.all()
-  #   |> IO.inspect(label: "DOCUMENTS:")
-  #   |> get_associated_documents
-  # end
-
-  # Ecto.assoc throws exception if it gets an empty list!
-  # def get_associated_documents(user_documents) do
-  #   case user_documents do
-  #     [] -> []
-  #     _ -> user_documents
-  #             |> Ecto.assoc(:document)
-  #             |> Repo.all()
-  #   end
-  # end
-
-  def get_user_document!(%Accounts.User{} = user, id) do
-    {:ok, cast_id} = P.cast(id)
-
-    %UserDocument{ user_role: user_role } = UserDocument
-      |> user_documents_query(user)
-      |> where([v,d], d.id == ^cast_id)
-      # |> select([v,d], d.id) 
-      |> Repo.one()
-
-      user_role
-      |> IO.inspect(label: "USER_ROLE:")
-
-    Document
-    |> Repo.get!(cast_id)
   end
 
   defp user_documents_query(query, %Accounts.User{id: user_id}) do
     from(v in query, 
          where: v.user_id == ^user_id,
-         join: d in "documents",
-         on: d.id == v.document_id)
+         preload: [:document]
+         )
+  end
+
+  defp user_document_query(query, %Accounts.User{id: user_id}, document_id) do
+    from(v in query, 
+         where: v.user_id == ^user_id,
+         where: v.document_id == ^document_id,
+         preload: [:document]
+         )
+  end
+
+  def get_user_document!(%Accounts.User{} = user, id) do
+    {:ok, cast_id} = P.cast(id)
+
+    %UserDocument{ user_role: user_role, document: document} = UserDocument
+      |> user_document_query(user, cast_id)
+      |> Repo.one
+
+      document
   end
 
   @doc """
