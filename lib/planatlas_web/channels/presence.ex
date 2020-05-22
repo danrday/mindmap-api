@@ -72,6 +72,8 @@ defmodule PlanatlasWeb.Presence do
   """
 
   def fetch(_topic, entries) do
+    IO.puts('fetch: entries')
+    IO.inspect(entries)
     users =
       entries
       |> Map.keys()

@@ -23,6 +23,7 @@ defmodule PlanatlasWeb.DocumentChannel do
   end
 
   def handle_info(:after_join, socket) do
+    IO.puts('after join... calling Presence.list')
     push(socket, "presence_state", PlanatlasWeb.Presence.list(socket))
     {:ok, _} = PlanatlasWeb.Presence.track(
       socket,
@@ -34,6 +35,23 @@ defmodule PlanatlasWeb.DocumentChannel do
   def handle_in(event, params, socket) do
     user = Accounts.get_user!(socket.assigns.user_id)
     handle_in(event, params, user, socket)
+  end
+
+  def handle_in("new_msg", msg, user, socket) do
+    broadcast!(socket, "server_msg", %{body: msg})
+    {:noreply, socket}
+  end
+
+  def handle_in("get_file", _params, user, socket) do
+    "documents:" <> document_id = socket.topic
+    document = Documents.get_user_document!(user, document_id)
+    {:reply, {:ok, %{"file": document.file}}, socket}
+  end
+
+  def handle_in("save_file", params, user, socket) do
+    "documents:" <> document_id = socket.topic
+    document = Documents.save_user_document!(user, document_id, params)
+    {:reply, {:ok, %{"file": "SAVED"}}, socket}
   end
 
   def handle_in("new_annotation", params, user, socket) do

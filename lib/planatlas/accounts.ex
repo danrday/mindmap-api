@@ -59,6 +59,8 @@ defmodule Planatlas.Accounts do
 	end
 
 	def list_users_with_ids(ids) do
+		IO.puts('list_users_with_ids: ')
+		IO.puts(IO.inspect(ids))
 		Repo.all(from(u in User, where: u.id in ^ids))
 	end
 end

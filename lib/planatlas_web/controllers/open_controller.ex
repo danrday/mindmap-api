@@ -4,7 +4,11 @@ defmodule PlanatlasWeb.OpenController do
   alias Planatlas.Documents
 
   def open(conn, %{"id" => id}) do
+
     document = Documents.get_document!(id)
-    render(conn, "open.html", document: document)
+
+    conn
+    |> put_layout(false)
+    |> render("open.html", document: document)
   end
 end

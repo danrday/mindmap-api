@@ -16,6 +16,7 @@ config :planatlas, Planatlas.Repo,
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :planatlas, PlanatlasWeb.Endpoint,
+  url: [host: "192.168.1.177", port: 4000],
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,

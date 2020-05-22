@@ -32,7 +32,7 @@ defmodule Planatlas.Documents do
     UserDocument
     |> user_documents_query(user)
     |> Repo.all()
-    # |> Repo.preload(:document) does this make another call to the db?
+    # |> Repo.preload(:document)
     |> Enum.map(&(&1.document))
   end
 
@@ -59,6 +59,11 @@ defmodule Planatlas.Documents do
       |> Repo.one
 
       document
+  end
+
+  def save_user_document!(user, id, params) do
+    document = get_user_document!(user, id)
+    update_document(document, %{file: params})
   end
 
   @doc """
@@ -138,6 +143,7 @@ defmodule Planatlas.Documents do
   def create_document(attrs \\ %{}, %Accounts.User{} = user) do
     %Document{}
     |> Document.changeset(attrs)
+    |> Document.add_blank_json_document
     |> Repo.insert()
   end
 
@@ -156,6 +162,7 @@ defmodule Planatlas.Documents do
   def update_document(%Document{} = document, attrs) do
     document
     |> Document.changeset(attrs)
+    |> IO.inspect
     |> Repo.update()
   end
 
@@ -197,4 +204,5 @@ defmodule Planatlas.Documents do
   def change_document(%Document{} = document) do
     Document.changeset(document, %{})
   end
+
 end
