@@ -33,11 +33,17 @@ defmodule PlanatlasWeb.DocumentChannel do
   end
 
   def handle_in(event, params, socket) do
-    user = Accounts.get_user!(socket.assigns.user_id)
-    handle_in(event, params, user, socket)
+    case event do
+      "new_msg" -> 
+        handle_in("new_msg", params, nil, socket)
+      _ ->
+        user = Accounts.get_user!(socket.assigns.user_id)
+        handle_in(event, params, user, socket)
+    end
+   
   end
 
-  def handle_in("new_msg", msg, user, socket) do
+  def handle_in("new_msg", msg, _user, socket) do
     broadcast!(socket, "server_msg", %{body: msg})
     {:noreply, socket}
   end
