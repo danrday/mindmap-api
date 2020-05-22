@@ -50,5 +50,9 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  <script src="../react-dev-build/js/bundle.js"></script><script src="../react-dev-build/js/0.chunk.js"></script><script src="../react-dev-build/js/main.chunk.js"></script></body>
+  <script src="../react-dev-build/js/bundle.js"></script>
+  <script src="../react-dev-build/js/0.chunk.js"></script>
+  <script src="../react-dev-build/js/1.chunk.js"></script>
+  <script src="../react-dev-build/js/main.chunk.js"></script>
+</body>
 </html>
