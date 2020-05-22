@@ -18,17 +18,13 @@ import { Presence } from "phoenix"
 // Local files can be imported directly using relative paths, for example:
 import socket from "./socket"
 
-let doc = document.getElementById("doc")
-
 function renderAnnotation(msgContainer, {user, body, at}) {
   let template = document.createElement("div")
-
   template.innerHTML = `
   <a href="#" data-seek="${esc(at)}">
     <b>${esc(user.username)}</b>: ${esc(body)}
   </a>
   `
-
   msgContainer.appendChild(template)
   msgContainer.scrollTop = msgContainer.scrollheight
 }
@@ -39,6 +35,7 @@ function esc(str){
   return div.innerHTML
 }
 
+let doc = document.getElementById("doc")
 if (doc) {
   let data_id = doc.getAttribute("data-id")
   console.log("document found! : ", data_id)
@@ -57,6 +54,7 @@ if (doc) {
   let presence = new Presence(doc_channel)
 
   presence.onSync(() => {
+    console.log("presence.onSync")
     userList.innerHTML = presence.list((id, 
       {user: user, metas: [first, ...rest]}) => {
       let count = rest.length + 1

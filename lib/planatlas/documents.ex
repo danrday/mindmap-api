@@ -10,6 +10,7 @@ defmodule Planatlas.Documents do
   alias Planatlas.Accounts.UserDocument
   alias Planatlas.Documents.Document
   alias Planatlas.Documents.Annotation
+  alias Planatlas.Documents.Permalink, as: P
 
   def annotate_document(%Accounts.User{id: user_id}, document_id, attrs) do
     %Annotation{document_id: document_id, user_id: user_id}
@@ -27,30 +28,42 @@ defmodule Planatlas.Documents do
     )
   end
 
-  # def list_user_documents(%Accounts.User{} = user) do
-  #   UserDocument
-  #   |> user_videos_query(user)
-  #   |> Repo.all()
-  # end
-
   def list_user_documents(%Accounts.User{} = user) do
     UserDocument
     |> user_documents_query(user)
     |> Repo.all()
-    |> Ecto.assoc(:document)
-    |> Repo.all()
-  end
-
-  def get_user_document!(%Accounts.User{} = user, id) do
-    UserDocument
-    |> user_documents_query(user)
-    |> Repo.all()
-    |> Ecto.assoc(:document)
-    |> Repo.get!(id)
+    # |> Repo.preload(:document)
+    |> Enum.map(&(&1.document))
   end
 
   defp user_documents_query(query, %Accounts.User{id: user_id}) do
-    from(v in query, where: v.user_id == ^user_id, join: d in "documents", on: d.id == v.document_id)
+    from(v in query, 
+         where: v.user_id == ^user_id,
+         preload: [:document]
+         )
+  end
+
+  defp user_document_query(query, %Accounts.User{id: user_id}, document_id) do
+    from(v in query, 
+         where: v.user_id == ^user_id,
+         where: v.document_id == ^document_id,
+         preload: [:document]
+         )
+  end
+
+  def get_user_document!(%Accounts.User{} = user, id) do
+    {:ok, cast_id} = P.cast(id)
+
+    %UserDocument{ user_role: user_role, document: document} = UserDocument
+      |> user_document_query(user, cast_id)
+      |> Repo.one
+
+      document
+  end
+
+  def save_user_document!(user, id, params) do
+    document = get_user_document!(user, id)
+    update_document(document, %{file: params})
   end
 
   @doc """
@@ -130,6 +143,7 @@ defmodule Planatlas.Documents do
   def create_document(attrs \\ %{}, %Accounts.User{} = user) do
     %Document{}
     |> Document.changeset(attrs)
+    |> Document.add_blank_json_document
     |> Repo.insert()
   end
 
@@ -148,6 +162,7 @@ defmodule Planatlas.Documents do
   def update_document(%Document{} = document, attrs) do
     document
     |> Document.changeset(attrs)
+    |> IO.inspect
     |> Repo.update()
   end
 
@@ -167,6 +182,11 @@ defmodule Planatlas.Documents do
     Repo.delete(document)
   end
 
+  def delete_annotations(%Document{} = document) do
+    from(d in Annotation, where: d.document_id == ^document.id)
+    |> Repo.delete_all
+  end
+
   def delete_user_documents(%Document{} = document) do
     from(d in UserDocument, where: d.document_id == ^document.id)
     |> Repo.delete_all
@@ -184,4 +204,5 @@ defmodule Planatlas.Documents do
   def change_document(%Document{} = document) do
     Document.changeset(document, %{})
   end
+
 end
