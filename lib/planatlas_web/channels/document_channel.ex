@@ -44,18 +44,29 @@ defmodule PlanatlasWeb.DocumentChannel do
   end
 
   def handle_in("new_msg", msg, _user, socket) do
-    broadcast!(socket, "server_msg", %{body: msg})
+    broadcast!(socket, "server_msg", %{body: msg, user_id: socket.assigns.user_id})
     {:noreply, socket}
   end
 
+  def handle_in("get_user_info", msg, user, socket) do
+    {:reply, {:ok, %{"user_id": user.id,
+                     "username": user.username,
+                     "name": user.name}}, socket}
+  end
+
+  # def handle_in("everyone_but_me", msg, _user, socket) do
+  #   broadcast_from!(socket, "server_msg", %{body: msg})
+  #   {:noreply, socket}
+  # end
+
   def handle_in("get_file", _params, user, socket) do
-    "documents:" <> document_id = socket.topic
+    document_id = socket.assigns.document_id
     document = Documents.get_user_document!(user, document_id)
     {:reply, {:ok, %{"file": document.file}}, socket}
   end
 
   def handle_in("save_file", params, user, socket) do
-    "documents:" <> document_id = socket.topic
+    document_id = socket.assigns.document_id
     document = Documents.save_user_document!(user, document_id, params)
     {:reply, {:ok, %{"file": "SAVED"}}, socket}
   end
