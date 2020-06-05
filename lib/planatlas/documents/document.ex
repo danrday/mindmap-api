@@ -72,6 +72,7 @@ defmodule Planatlas.Documents.Document do
           "checkedAttrs" => [],
           "fontSize" => %{"customValue" => nil, "defaultValue" => 50},
           "radius" => %{"customValue" => nil, "defaultValue" => 30},
+          "name" => %{"customValue" => nil, "defaultValue" => "new node"},
           "radiusRangeMax" => %{"customValue" => nil, "defaultValue" => 1000}
         },
         "radius" => nil,
@@ -102,18 +103,18 @@ defmodule Planatlas.Documents.Document do
       "nodes" => [
         %{
           "bbox" => %{},
-          "customAttrs" => %{"fontSize" => "150", "radius" => 397},
+          "customAttrs" => %{"fontSize" => "150", "radius" => 397, "name" => "new"},
           "fx" => -4431.874529348066,
           "fy" => -8603.301490308226,
           "globalSettings" => %{
             "checkedAttrs" => [],
             "fontSize" => %{"customValue" => nil, "defaultValue" => 50},
+            "name" => %{"customValue" => nil, "defaultValue" => 'new node'},
             "radius" => %{"customValue" => nil, "defaultValue" => 30},
             "radiusRangeMax" => %{"customValue" => nil, "defaultValue" => 1000}
           },
           "id" => "af0f8b50-dffd-47cf-a936-1b2627628e53",
           "index" => 0,
-          "name" => "new",
           "sticky" => true,
           "tempCustomAttrs" => %{"fontSize" => "150", "radius" => 397},
           "vx" => 0,
@@ -123,18 +124,18 @@ defmodule Planatlas.Documents.Document do
         },
         %{
           "bbox" => %{},
-          "customAttrs" => %{},
+          "customAttrs" => %{"name" => "asdf"},
           "fx" => -3870.382289679577,
           "fy" => -9410.482139214966,
           "globalSettings" => %{
             "checkedAttrs" => [],
             "fontSize" => %{"customValue" => nil, "defaultValue" => 50},
+            "name" => %{"customValue" => nil, "defaultValue" => 'new node'},
             "radius" => %{"customValue" => nil, "defaultValue" => 30},
             "radiusRangeMax" => %{"customValue" => nil, "defaultValue" => 1000}
           },
           "id" => "ee37261b-e659-4e68-91a6-a6846422e476",
           "index" => 1,
-          "name" => "asdf",
           "sticky" => true,
           "vx" => 0,
           "vy" => 0,
@@ -143,18 +144,18 @@ defmodule Planatlas.Documents.Document do
         },
         %{
           "bbox" => %{},
-          "customAttrs" => %{"radius" => 667},
+          "customAttrs" => %{"radius" => 667, "name" => "123"},
           "fx" => -3024.315433950241,
           "fy" => -8543.611727222364,
           "globalSettings" => %{
             "checkedAttrs" => [],
             "fontSize" => %{"customValue" => nil, "defaultValue" => 50},
+            "name" => %{"customValue" => nil, "defaultValue" => "new node"},
             "radius" => %{"customValue" => nil, "defaultValue" => 30},
             "radiusRangeMax" => %{"customValue" => nil, "defaultValue" => 1000}
           },
           "id" => "2fc4ce12-b49c-4590-a6dc-afc361320e85",
           "index" => 2,
-          "name" => "123",
           "sticky" => true,
           "vx" => 0,
           "vy" => 0,
