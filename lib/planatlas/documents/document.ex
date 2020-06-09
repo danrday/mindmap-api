@@ -50,7 +50,8 @@ defmodule Planatlas.Documents.Document do
         "chargeStrength" => "-700",
         "checkedAttrs" => ["linkDistance"],
         "controls" => %{
-          "radiusRangeMax" => %{"customValue" => 2833, "defaultValue" => 2000}
+          "radiusRangeMax" => %{"customValue" => 2833, "defaultValue" => 2000},
+          "fontSizeRangeMax" => %{"customValue" => nil, "defaultValue" => 500}
         },
         "defaults" => %{
           "bgColor" => "powderblue",
