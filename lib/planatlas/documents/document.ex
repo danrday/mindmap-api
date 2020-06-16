@@ -63,12 +63,10 @@ defmodule Planatlas.Documents.Document do
           "radius" => 30,
           "sideMenuOpenOnInit" => true
         },
-        "fontSize" => nil,
         "general" => %{
           "chargeStrength" => %{"customValue" => "-700", "defaultValue" => "-700"},
           "linkDistance" => %{"customValue" => "505", "defaultValue" => "505"}
         },
-        "linkDistance" => "505",
         "node" => %{
           "checkedAttrs" => [],
           "fontSize" => %{"customValue" => nil, "defaultValue" => 50},
@@ -76,8 +74,6 @@ defmodule Planatlas.Documents.Document do
           "name" => %{"customValue" => nil, "defaultValue" => "new node"},
           "radiusRangeMax" => %{"customValue" => nil, "defaultValue" => 1000}
         },
-        "radius" => nil,
-        "radiusRangeMax" => 756,
         "zoom" => %{
           "k" => 0.4079329796515761,
           "x" => 2031.315035870646,

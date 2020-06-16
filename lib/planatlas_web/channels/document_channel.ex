@@ -71,6 +71,13 @@ defmodule PlanatlasWeb.DocumentChannel do
     {:reply, {:ok, %{"file": "SAVED"}}, socket}
   end
 
+  def handle_in("save_file_as_copy", params, user, socket) do
+    document_id = socket.assigns.document_id
+    # implement save as logic here!
+    # document = Documents.save_user_document!(user, document_id, params)
+    {:reply, {:ok, %{"file": "SAVED"}}, socket}
+  end
+
   def handle_in("new_annotation", params, user, socket) do
     case Documents.annotate_document(user, socket.assigns.document_id, params) do
       {:ok, annotation} -> 
